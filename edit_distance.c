@@ -4,10 +4,11 @@
 #include <string.h>
 #include <mysql.h>
 #include <limits.h>
+#include <locale.h>
 
 my_bool edit_distance_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
-    return 0;
+  return 0;
 }
   
 void edit_distance_deinit(UDF_INIT *initid __attribute__((unused)))
@@ -27,6 +28,7 @@ uint32_t calc_edit_distance(char *x_start, char *x_end, char *y_start, char *y_e
   unsigned int insertion_cost = 1;
   unsigned int substitution_cost = 1;
   unsigned int transposition_cost = 1;
+  setlocale(LC_ALL, "ja_JP.UTF-8");
   for (px = sx, lx = 0; px < ex && (cx = mblen(px, MB_LEN_MAX)); px += cx, lx++);
   for (py = sy, ly = 0; py < ey && (cy = mblen(py, MB_LEN_MAX)); py += cy, ly++);
 
@@ -137,6 +139,7 @@ char *edit_distance(UDF_INIT *initid __attribute__((unused)),
     d = calc_edit_distance_bp(args->args[0], args->lengths[0],
                            args->args[1], args->lengths[1]);
   }
+  *is_null = 0;
   sprintf(result,"%d", d);
   *length = strlen(result);
   return result;
