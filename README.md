@@ -21,7 +21,7 @@ transposition対応のDamerau Edit distanceで編集距離を返します。
 
 ### 使用例
 
-```
+```sql
 CREATE TABLE IF NOT EXISTS `test` (
   `name` varchar(64) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -53,6 +53,14 @@ mysql> SELECT name, edit_distance(name, "MySQL") FROM test
 | MySOM  | 2                            |
 +--------+------------------------------+
 6 rows in set (0.00 sec)
+
+mysql> SELECT edit_distance("abc", "abd", 1);
++--------------------------------+
+| edit_distance("abc", "abd", 1) |
++--------------------------------+
+| 1                              |
++--------------------------------+
+1 row in set (0.00 sec)
 ```
 
 ### 比較
