@@ -8,6 +8,9 @@
 
 my_bool edit_distance_init(UDF_INIT *initid, UDF_ARGS *args, char *message)
 {
+  if (args->arg_count < 2) {
+    return 1;
+  }
   return 0;
 }
   
@@ -123,13 +126,11 @@ uint32_t calc_edit_distance_bp(char *x_start, unsigned int x_len, char *y_start,
   return score;
 }
   
-char *edit_distance(UDF_INIT *initid __attribute__((unused)),
-    UDF_ARGS *args, char *result, unsigned long *length,
-    char *is_null, char *error __attribute__((unused)))
+long long edit_distance(UDF_INIT *initid, UDF_ARGS *args, char *is_null, char *error)
 {
   if (!args->args[0] || !args->args[1]) {
     *is_null = 1;
-    return NULL;
+    return 0;
   }
   uint32_t d = 0;
   if (args->arg_count < 3) {
@@ -140,7 +141,5 @@ char *edit_distance(UDF_INIT *initid __attribute__((unused)),
                            args->args[1], args->lengths[1]);
   }
   *is_null = 0;
-  sprintf(result,"%d", d);
-  *length = strlen(result);
-  return result;
+  return d;
 }
